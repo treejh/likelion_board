@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+  <meta charset="UTF-8">
+  <title> 게시판 상세 페이지  </title>
+</head>
+<body>
+<h2 th:text="${board.title}"></h2>
+<p th:text="${board.name}"></p>
+<p th:text="${board.content}"></p>
+Created At :<p th:text="${#temporals.format(board.created_at, 'yyyy-MM HH:mm')}"> </p>
+Updated At :<p th:text="${#temporals.format(board.updated_at, 'yyyy-MM HH:mm')}"> </p>
+
+<a th:href="@{/board/list}">게시판 목록</a>
+<!--
+<a th:href="@{/friends/editPage/{id}(id=${friend.id})}">수정</a>
+
+<a th:href="@{/friends/deleteFriend/{id}(id=${friend.id})}">삭제</a>-->
+
+</body>
+</html>
