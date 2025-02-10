@@ -6,12 +6,15 @@ import com.example.likelion_board.service.BoardService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.Banner.Mode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -38,16 +41,76 @@ public class BoardController {
         return "board/list";
     }
 
+    @GetMapping("/add")
+    public String addBoard(Model model){
+        model.addAttribute(new Board());
+        return "board/add";
+    }
+
+    @PostMapping("/add")
+    public String addBoard(@ModelAttribute Board board){
+        boardService.addBoard(board);
+
+        return "redirect:/board/list";
+    }
+
     @GetMapping("/view")
     public String viewBoard(@RequestParam("id") Long id, @RequestParam("currentPage") int currentPage, Model model){
-        System.out.println("hihihihihi222222");
         model.addAttribute("board",boardService.findBoard(id));
-        System.out.println(boardService.findBoard(id).getTitle());
-        System.out.println("hihihihihi");
         model.addAttribute("currentPage",currentPage);
 
         return "board/view";
     }
+
+
+    @GetMapping("/edit")
+    public String editBoard(@RequestParam("id") Long id, @RequestParam("currentPage") int currentPage, Model model){
+        model.addAttribute("board",boardService.findBoard(id));
+        model.addAttribute("currentPage",currentPage);
+        return "board/edit";
+    }
+
+    @PostMapping("/edit")
+    public String editBoard(@RequestParam("id") Long id, @RequestParam("currentPage") int currentPage,
+                            @ModelAttribute Board board,Model model){
+        try{
+            boardService.editBoard(board);
+        }
+        catch (RuntimeException e){
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("board",board);
+            model.addAttribute("currentPage",currentPage);
+            return "board/edit";
+        }
+        return "redirect:/board/list";
+
+    }
+
+    @PostMapping("/delete")
+    public String deleteBoard(@RequestParam("id") Long id, @RequestParam("currentPage") int currentPage,
+                              @ModelAttribute Board board,Model model){
+
+        try{
+            boardService.deleteBoard(board);
+        }
+        catch (RuntimeException e){
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("board",board);
+            model.addAttribute("currentPage",currentPage);
+            return "board/delete";
+        }
+        return "redirect:/board/list";
+    }
+
+    @GetMapping("/delete")
+    public String deleteBoard(@RequestParam("id") Long id, @RequestParam("currentPage") int currentPage,
+                              Model model){
+
+        model.addAttribute("board",boardService.findBoard(id));
+        model.addAttribute("currentPage",currentPage);
+        return "board/delete";
+    }
+
 
 
 

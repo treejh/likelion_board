@@ -3,19 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <title> 게시판 상세 페이지  </title>
+  <link rel="stylesheet" th:href="@{/css/list.css}">
 </head>
 <body>
 <h2 th:text="${board.title}"></h2>
-<p th:text="${board.name}"></p>
-<p th:text="${board.content}"></p>
-Created At :<p th:text="${#temporals.format(board.created_at, 'yyyy-MM HH:mm')}"> </p>
-Updated At :<p th:text="${#temporals.format(board.updated_at, 'yyyy-MM HH:mm')}"> </p>
+<label>Name : </label> <span th:text="${board.name}"></span>
+<br><br><br>
+<label>Content : </label> <span th:text="${board.content}"></span>
+<br><br>
+<label>Created At : </label> <span th:text="${#temporals.format(board.created_at, 'yyyy-MM-dd HH:mm')}"></span>
+<br><br>
+<label>Updated At : </label> <span th:text="${#temporals.format(board.updated_at, 'yyyy-MM-dd HH:mm')}"></span>
+<br><br>
+<a th:href="@{/board/list}" style="margin-right: 30px;">게시판 목록</a>
 
-<a th:href="@{/board/list}">게시판 목록</a>
-<!--
-<a th:href="@{/friends/editPage/{id}(id=${friend.id})}">수정</a>
+<a th:href="@{/board/edit(id=${board.id}, currentPage=${currentPage})}" style="margin-right: 30px;">수정</a>
 
-<a th:href="@{/friends/deleteFriend/{id}(id=${friend.id})}">삭제</a>-->
+
+<a th:href="@{/board/delete(id=${board.id}, currentPage=${currentPage})}" style="margin-right: 30px;">삭제</a>
 
 </body>
 </html>

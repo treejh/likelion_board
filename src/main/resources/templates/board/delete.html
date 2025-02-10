@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+</head>
+<body>
+<h1>delete Board </h1>
+<form th:action="@{/board/delete(id=${board.id}, currentPage=${currentPage})}" method="post" th:object="${board}">
+
+  <label for="password">PassWord : </label>
+  <input type="password" id="password" th:field="*{password}" required>
+
+  <button type="submit">Delete</button>
+
+
+  <div th:if="${errorMessage}" style="color:red;">
+    <p th:text="${errorMessage}"></p>
+  </div>
+</form>
+</body>
+</html>
