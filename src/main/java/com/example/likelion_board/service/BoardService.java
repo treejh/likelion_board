@@ -4,6 +4,7 @@ package com.example.likelion_board.service;
 import com.example.likelion_board.domain.Board;
 import com.example.likelion_board.repository.BoardRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,7 @@ public class BoardService {
     public Page<Board> findAllPages(Pageable pageable) {
         Pageable pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
                 Sort.by(Direction.DESC, "updated_at"));
+
 
         return boardRepository.findAll(pageRequest);
     }

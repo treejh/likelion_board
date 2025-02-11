@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head>
+
   <meta charset="UTF-8">
   <title> 게시판 상세 페이지  </title>
   <link rel="stylesheet" th:href="@{/css/list.css}">
@@ -21,6 +22,98 @@
 
 
 <a th:href="@{/board/delete(id=${board.id}, currentPage=${currentPage})}" style="margin-right: 30px;">삭제</a>
+<h3>댓글</h3>
+
+<!-- 댓글 목록 -->
+<ul>
+  <li th:each="comment : ${comments}" style="display: block; margin-bottom: 10px;">
+    <strong th:text="${comment.author}">작성자</strong> :
+    <span th:text="${comment.content}">댓글 내용</span>
+    <br>
+    <span th:text="${#temporals.format(comment.updated_at, 'yyyy-MM-dd HH:mm')}"></span>
+    <!--<button type="button" onclick="toggleCommentEditForm(${comment.id})">수정</button>-->
+
+    <form th:action="@{/comment/edit(id=${comment.id},boardId=${board.id},currentPage=${currentPage})}" method="post">
+        <label for="commentContent">Content : </label>
+        <textarea id="commentContent" name="commentContent" rows="5" cols="50" required></textarea>
+
+        <label for="commentPassword">비밀번호: </label>
+        <input type="password" id="commentPassword" name="commentPassword" required>
+
+        <button type="submit">댓글 수정</button>
+
+        <div th:if="${editErrorMessage}" style="color:red;">
+        <p th:text="${editErrorMessage}"></p>
+        </div>
+
+      </form>
+    <form th:action="@{/comment/delete(id=${comment.id},boardId=${board.id},currentPage=${currentPage})}" method="post">
+
+    <label for="commentPassword">비밀번호: </label>
+      <input type="password" id="commentDelete" name="commentPassword" required>
+
+      <button type="submit">댓글 삭제</button>
+
+      <div th:if="${deleteErrorMessage}" style="color:red;">
+        <p th:text="${deleteErrorMessage}"></p>
+      </div>
+
+    </form>
+
+  </li>
+</ul>
+
+<script>
+  function toggleCommentEditForm(commentId) {
+    var form = document.getElementById("commentEditForm_" + commentId);
+
+    if (form.style.display === "none" || form.style.display === "") {
+      form.style.display = "block";
+    } else {
+      form.style.display = "none";
+    }
+  }
+</script>
+
+<button onclick="toggleCommentForm()">댓글 작성</button>
+
+
+<div id="commentForm">
+  <h3>댓글 작성</h3>
+  <form th:action="@{/comment/add(boardId=${board.id}, currentPage=${currentPage})}" method="post">
+
+    <label for="author">이름: </label>
+    <input type="text" id="author" name="author" required>
+
+    <label for="password">비밀번호: </label>
+    <input type="password" id="password" name="password" required>
+
+    <label for="content">댓글 내용: </label>
+    <textarea id="content" name="content" required></textarea>
+
+    <button type="submit">댓글 작성</button>
+  </form>
+</div>
+<div th:if="${comments.totalPages > 1}">
+  <ul>
+    <li th:each="i : ${#numbers.sequence(1, comments.totalPages)}">
+      <a th:href="@{/board/view(page=${i}, id=${board.id}, currentPage=${currentPage})}" th:text="${i}"></a>
+    </li>
+  </ul>
+</div>
+
+<script>
+  function toggleCommentForm() {
+    var form = document.getElementById("commentForm");
+    if (form.style.display === "none" || form.style.display === "") {
+      form.style.display = "block";
+    } else {
+      form.style.display = "none";
+    }
+  }
+</script>
+
+
 
 </body>
 </html>

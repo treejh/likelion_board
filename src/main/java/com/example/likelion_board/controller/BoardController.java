@@ -2,11 +2,13 @@ package com.example.likelion_board.controller;
 
 
 import com.example.likelion_board.domain.Board;
+import com.example.likelion_board.domain.Comment;
 import com.example.likelion_board.service.BoardService;
+import com.example.likelion_board.service.CommentService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.Banner.Mode;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class BoardController {
 
     private final BoardService boardService;
+    private final CommentService commentService;
+
 
 
     @GetMapping("/list")
@@ -33,10 +37,6 @@ public class BoardController {
         model.addAttribute("board",boardService.findAllPages(pageable));
         model.addAttribute("currentPage",page);
 
-        List<Board> a = boardService.findAllPages(pageable).get().collect(Collectors.toList());
-        for(Board boad : a){
-            System.out.println(boad.getName());
-        }
 
         return "board/list";
     }
@@ -55,9 +55,14 @@ public class BoardController {
     }
 
     @GetMapping("/view")
-    public String viewBoard(@RequestParam("id") Long id, @RequestParam("currentPage") int currentPage, Model model){
+    public String viewBoard(@RequestParam("id") Long id, @RequestParam("currentPage") int currentPage,
+                            @RequestParam(name="page", required = false, defaultValue = "1") int page,
+                            @RequestParam(name="size", required = false, defaultValue = "5") int size,
+                            Model model){
+        Pageable commentPageable = PageRequest.of(page-1,size);
         model.addAttribute("board",boardService.findBoard(id));
         model.addAttribute("currentPage",currentPage);
+        model.addAttribute("comments",commentService.findAllComment(id,commentPageable));
 
         return "board/view";
     }
@@ -89,7 +94,6 @@ public class BoardController {
     @PostMapping("/delete")
     public String deleteBoard(@RequestParam("id") Long id, @RequestParam("currentPage") int currentPage,
                               @ModelAttribute Board board,Model model){
-
         try{
             boardService.deleteBoard(board);
         }
@@ -110,6 +114,7 @@ public class BoardController {
         model.addAttribute("currentPage",currentPage);
         return "board/delete";
     }
+
 
 
 

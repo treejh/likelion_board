@@ -43,3 +43,13 @@ li a.active {
     text-align: center;
     margin-top: 20px;
 }
+
+#commentForm {
+    display: none;
+}
+
+
+#commentEditForm {
+    display: none;
+}
+
